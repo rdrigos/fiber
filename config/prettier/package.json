@@ -1,0 +1,9 @@
+{
+  "name": "@fiber/prettier",
+  "version": "1.0.0",
+  "main": "prettier.config.mjs",
+  "private": true,
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}
