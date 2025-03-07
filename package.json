@@ -1,0 +1,17 @@
+{
+  "name": "fiber",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "format": "turbo format",
+    "lint": "turbo lint"
+  },
+  "devDependencies": {
+    "turbo": "latest"
+  },
+  "packageManager": "pnpm@10.5.2",
+  "engines": {
+    "node": ">=18"
+  }
+}
