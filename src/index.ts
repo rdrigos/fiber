@@ -1,1 +1,1 @@
-console.log({ lib: '@fiber/core' });
+export { Fiber } from '@/lib/http/server';
