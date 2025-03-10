@@ -1,3 +1,9 @@
+import { StatusCodes } from '@/lib/enums/status-codes';
+import http from 'node:http';
+import util from 'node:util';
+
+type Handler = (request: http.IncomingMessage, reply: http.ServerResponse) => Promise<void>;
+
 interface ListenOptions {
   port: number;
   host?: string;
@@ -5,15 +11,33 @@ interface ListenOptions {
 
 export class Fiber {
   private readonly endpoints: Map<string, any>;
+  private readonly server: http.Server;
 
   constructor() {
     this.endpoints = new Map();
+    this.server = http.createServer(this.handle.bind(this));
   }
 
-  public async listen(options: ListenOptions): Promise<void> {
-    console.log({
-      options,
-      endpoints: this.endpoints,
-    });
+  private async handle(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
+    const key: string = util.format('%s %s', req.method, req.url);
+    const handler: Handler | undefined = this.endpoints.get(key);
+
+    if (!handler) {
+      res.writeHead(StatusCodes.NOT_FOUND, { 'content-type': 'application/json' });
+      res.end(
+        JSON.stringify({
+          message: util.format('%s %s not found', req.method, req.url),
+          error: 'Not Found',
+          statusCode: StatusCodes.NOT_FOUND,
+        }),
+      );
+      return;
+    }
+
+    await handler(req, res);
+  }
+
+  public async listen({ port, host }: ListenOptions): Promise<void> {
+    this.server.listen(port, host);
   }
 }
